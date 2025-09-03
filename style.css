@@ -55,7 +55,7 @@ header {
 
 /* Chattbubblor */
 .chat-message {
-  max-width: 70%;
+  max-width: 80%;
   padding: 12px 16px;
   border-radius: 18px;
   line-height: 1.4;
@@ -70,21 +70,23 @@ header {
   background: #daf1ff;
   color: #034078;
   align-self: flex-end;
+  border-bottom-right-radius: 6px;
 }
 
 .chat-message.bot {
   background: #e9ecef;
   color: #202123;
   align-self: flex-start;
+  border-bottom-left-radius: 6px;
 }
 
-/* Input-området alltid längst ner */
+/* Input-området fixerat längst ner */
 #input-area {
   display: flex;
   padding: 15px;
   border-top: 1px solid #eaeaea;
   background: #ffffff;
-  position: sticky; /* Fäst längst ner */
+  position: sticky; /* Klistrar längst ner i containern */
   bottom: 0;
 }
 
