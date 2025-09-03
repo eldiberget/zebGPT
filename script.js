@@ -1,75 +1,44 @@
-const sendBtn = document.getElementById('send-btn');
+const chatForm = document.getElementById('chat-form');
 const userInput = document.getElementById('user-input');
 const chatBox = document.getElementById('chat-box');
 
-// Kolla om knappen ligger i ett form-element (för att stoppa reload vid submit)
-const form = sendBtn.closest('form');
-if (form) {
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Stoppar reload vid submit
-    await handleSend();
-  });
-} else {
-  // Om inget form-element, kör på klick-event på knappen
-  sendBtn.addEventListener('click', async () => {
-    await handleSend();
-  });
-}
+chatForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-function formatReply(reply) {
-  // Kolla om svaret är en numrerad lista (1. 2. 3. ...)
-  const lines = reply.split('\n');
-  const isList = lines.every(line => /^\d+\.\s/.test(line.trim()));
+  const userMessage = userInput.value.trim();
+  if (!userMessage) return;
 
-  if (isList) {
-    const listItems = lines
-      .map(line => `<li>${line.replace(/^\d+\.\s/, '')}</li>`)
-      .join('');
-    return `<ul>${listItems}</ul>`;
-  } else {
-    // Annars behåll radbrytningar
-    return reply.replace(/\n/g, '<br>');
-  }
-}
-
-async function handleSend() {
-  const message = userInput.value.trim();
-  if (!message) return;
-
-  // Lägg till användarens fråga i chatten med en klass för styling
-  chatBox.innerHTML += `<p class="chat-message user"><strong>Du:</strong> ${message}</p>`;
+  // Visa användarens meddelande
+  addMessage('Du', userMessage);
   userInput.value = '';
-  chatBox.scrollTop = chatBox.scrollHeight;
 
-  // Visa "tänker..." medan vi väntar på svar
-  const thinking = document.createElement('p');
-  thinking.className = 'chat-message bot';
-  thinking.innerHTML = `<em>ZebGPT tänker...</em>`;
-  chatBox.appendChild(thinking);
-  chatBox.scrollTop = chatBox.scrollHeight;
+  // Visa "Laddar..." medan vi väntar på svar
+  const loadingMessage = addMessage('ZebGPT', 'Skriver...');
 
   try {
-    const response = await fetch('/openai', {
+    const response = await fetch('https://zebgpt.onrender.com/openai', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ message: userMessage })
     });
+
+    if (!response.ok) {
+      throw new Error(`Serverfel: ${response.status}`);
+    }
 
     const data = await response.json();
 
-    // Ta bort "tänker..."
-    chatBox.removeChild(thinking);
-
-    if (data.reply) {
-      const formatted = formatReply(data.reply);
-      chatBox.innerHTML += `<p class="chat-message bot"><strong>ZebGPT:</strong><br>${formatted}</p>`;
-    } else {
-      chatBox.innerHTML += `<p class="chat-message bot"><strong>ZebGPT:</strong> Något gick fel.</p>`;
-    }
-  } catch (err) {
-    chatBox.removeChild(thinking);
-    chatBox.innerHTML += `<p class="chat-message bot"><strong>ZebGPT:</strong> Fel vid anrop.</p>`;
+    // Ta bort "Skriver..." och lägg till svaret
+    loadingMessage.remove();
+    addMessage('ZebGPT', data.reply || 'Inget svar från AI:n.');
+  } catch (error) {
+    console.error('Fel vid anrop:', error);
+    loadingMessage.remove();
+    addMessage('ZebGPT', 'Kunde inte kontakta servern. Försök igen senare.');
   }
+});
 
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
+function addMessage(sender, message) {
+  const message
