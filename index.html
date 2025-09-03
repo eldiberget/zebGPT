@@ -9,11 +9,17 @@
 <body>
 <div id="app">
   <header>ZebGPT</header>
-  
+
   <main id="chat-box" role="log" aria-live="polite" aria-relevant="additions"></main>
-  
+
   <form id="input-area" autocomplete="off">
-    <input id="user-input" name="user-input" placeholder="Skriv din fråga här..." required />
+    <input 
+      id="user-input" 
+      name="user-input" 
+      placeholder="Skriv din fråga här..." 
+      required 
+      aria-label="Skriv din fråga här"
+    />
     <button id="send-btn" type="submit">Skicka</button>
   </form>
 </div>
@@ -26,7 +32,7 @@
   function addMessage(sender, text) {
     const div = document.createElement('div');
     div.classList.add('chat-message', sender);
-    
+
     if (sender === 'bot') {
       if (text.includes('\n')) {
         const items = text.split('\n').filter(line => line.trim() !== '');
@@ -43,7 +49,7 @@
     } else {
       div.textContent = text;
     }
-    
+
     chatBox.appendChild(div);
     chatBox.scrollTop = chatBox.scrollHeight;
   }
