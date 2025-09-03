@@ -1,0 +1,102 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #343541;
+  color: #ffffff;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 95vh;
+  width: 100%;
+  max-width: 800px;
+  background-color: #40414f;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+header {
+  background-color: #202123;
+  padding: 15px;
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  border-bottom: 1px solid #2d2f3b;
+}
+
+#chat-box {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+#chat-box p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+#chat-box p strong {
+  color: #10a37f;
+}
+
+#input-area {
+  display: flex;
+  padding: 15px;
+  background-color: #343541;
+  border-top: 1px solid #2d2f3b;
+}
+
+#user-input {
+  flex: 1;
+  padding: 12px;
+  font-size: 1em;
+  border: none;
+  border-radius: 6px;
+  margin-right: 10px;
+  outline: none;
+  background-color: #555;
+  color: white;
+}
+
+#send-btn {
+  padding: 12px 18px;
+  background-color: #10a37f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.2s ease-in-out;
+}
+
+#send-btn:hover {
+  background-color: #0e8c6e;
+}
+
+/* Mobilanpassning */
+@media (max-width: 600px) {
+  #app {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  #user-input {
+    font-size: 0.9em;
+  }
+
+  #send-btn {
+    font-size: 0.9em;
+    padding: 10px 14px;
+  }
+}
